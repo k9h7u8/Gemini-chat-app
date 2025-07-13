@@ -1,0 +1,99 @@
+// src/app.module.ts
+import { Module } from '@nestjs/common';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { PrismaService } from './prisma/prisma.service';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
+import { ChatroomModule } from './chatroom/chatroom.module';
+import { BullModule } from '@nestjs/bullmq';
+import { CacheModule } from '@nestjs/cache-manager';
+import * as redisStore from 'cache-manager-redis-store';
+
+@Module({
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
+
+    BullModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => {
+        const redisUrl = configService.get<string>('REDIS_URL');
+        if (!redisUrl) {
+          throw new Error('REDIS_URL is not defined in environment variables for BullMQ.');
+        }
+        const parsedRedisUrl = new URL(redisUrl);
+
+        const connectionOptions: any = { // Use 'any' or define a more specific type if needed
+          host: parsedRedisUrl.hostname,
+          port: parseInt(parsedRedisUrl.port),
+          password: parsedRedisUrl.password || undefined,
+          // Add these ioredis specific options for resilience:
+          maxRetriesPerRequest: null, // Allow commands to retry indefinitely
+          enableOfflineQueue: true, // Queue commands while connection is down
+          retryStrategy: (times) => {
+            const delay = Math.min(times * 50, 2000); // Exponential backoff, max 2 seconds
+            console.log(`BullMQ Redis: Retrying connection (${times}). Delay: ${delay}ms`);
+            return delay;
+          },
+          // For rediss:// URLs, ioredis handles TLS automatically.
+          // Explicit `tls: {}` might be needed for some highly specific setups,
+          // but generally `rediss://` is sufficient for cloud providers like Render.
+          // If you face TLS errors, you might try: tls: {}
+        };
+
+        return {
+          connection: connectionOptions,
+          defaultJobOptions: {
+            attempts: 3,
+            backoff: {
+              type: 'exponential',
+              delay: 1000,
+            },
+          },
+        };
+      },
+      inject: [ConfigService],
+    }),
+
+    CacheModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => {
+        const redisUrl = configService.get<string>('REDIS_URL');
+        if (!redisUrl) {
+          throw new Error('REDIS_URL is not defined in environment variables for CacheModule.');
+        }
+        const parsedRedisUrl = new URL(redisUrl);
+
+        const storeOptions: any = { // Use 'any' or define a more specific type if needed
+          store: redisStore,
+          host: parsedRedisUrl.hostname,
+          port: parseInt(parsedRedisUrl.port),
+          password: parsedRedisUrl.password || undefined,
+          ttl: 300,
+          // Add these ioredis specific options for resilience for the cache:
+          maxRetriesPerRequest: null, // Allow commands to retry indefinitely
+          enableOfflineQueue: true, // Queue commands while connection is down
+          retryStrategy: (times) => {
+            const delay = Math.min(times * 50, 2000); // Exponential backoff, max 2 seconds
+            console.log(`Cache Redis: Retrying connection (${times}). Delay: ${delay}ms`);
+            return delay;
+          },
+          // Same TLS considerations as above.
+        };
+
+        return storeOptions;
+      },
+      inject: [ConfigService],
+      isGlobal: true,
+    }),
+
+    AuthModule,
+    ChatroomModule,
+  ],
+  controllers: [AppController],
+  providers: [AppService, PrismaService],
+})
+export class AppModule {}

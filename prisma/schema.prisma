@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum SubscriptionStatus {
+  Basic
+  Pro
+}
+
+enum SenderType {
+  User
+  AI
+}
+
+model User {
+  id                String             @id @default(uuid())
+  mobileNumber      String             @unique
+  password          String
+  subscriptionStatus SubscriptionStatus @default(Basic)
+  chatrooms         Chatroom[]
+}
+
+model Chatroom {
+  id        String    @id @default(uuid())
+  name      String    @db.VarChar(100)
+  creator   User      @relation(fields: [creatorId], references: [id])
+  creatorId String    @map("creator_id") // Foreign key to User
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  messages  Message[] // Relation to Message model
+
+  @@map("chatrooms") // Map table name to 'chatrooms' in the database
+}
+
+model Message {
+  id          String    @id @default(uuid())
+  content     String    @db.Text
+  isFromGemini Boolean   @default(false) // True if message is from Gemini, false if from user
+  createdAt   DateTime  @default(now())
+  chatroom    Chatroom  @relation(fields: [chatroomId], references: [id])
+  chatroomId  String    @map("chatroom_id") // Foreign key to Chatroom model
+
+  @@map("messages") // Map table name to 'messages' in the database
+}
