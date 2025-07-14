@@ -43,6 +43,7 @@ import * as redisStore from 'cache-manager-redis-store';
           // Explicit `tls: {}` might be needed for some highly specific setups,
           // but generally `rediss://` is sufficient for cloud providers like Render.
           // If you face TLS errors, you might try: tls: {}
+          tls: parsedRedisUrl.protocol === 'rediss:' ? {} : undefined, // Explicit TLS for Upstash
         };
 
         return {
@@ -83,6 +84,7 @@ import * as redisStore from 'cache-manager-redis-store';
             return delay;
           },
           // Same TLS considerations as above.
+          tls: parsedRedisUrl.protocol === 'rediss:' ? {} : undefined, // Explicit TLS for Upstash
         };
 
         return storeOptions;
