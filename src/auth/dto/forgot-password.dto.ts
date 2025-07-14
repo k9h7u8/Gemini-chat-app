@@ -1,4 +1,3 @@
-// src/auth/dto/forgot-password.dto.ts
 import { IsMobilePhone } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 

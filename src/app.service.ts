@@ -1,10 +1,9 @@
-// src/app.service.ts
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config'; // Import ConfigService
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AppService {
-  constructor(private configService: ConfigService) {} // Inject ConfigService
+  constructor(private configService: ConfigService) {}
 
   getHello(): string {
     const databaseUrl = this.configService.get<string>('DATABASE_URL');

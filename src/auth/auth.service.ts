@@ -1,4 +1,3 @@
-// src/auth/auth.service.ts
 import { Injectable, UnauthorizedException, BadRequestException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
@@ -9,8 +8,6 @@ import { VerifyOtpDto } from './dto/verify-otp.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { ConfigService } from '@nestjs/config';
 
-// In-memory store for OTPs (for mocking/development purposes)
-// In a real application, use Redis or a database table for persistence and scalability.
 interface OtpStore {
   [mobileNumber: string]: {
     code: string;
@@ -20,7 +17,7 @@ interface OtpStore {
 
 @Injectable()
 export class AuthService {
-  private readonly otpStore: OtpStore = {}; // In-memory OTP storage
+  private readonly otpStore: OtpStore = {};
 
   constructor(
     private prisma: PrismaService,

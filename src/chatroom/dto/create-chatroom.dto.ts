@@ -1,4 +1,3 @@
-// src/chatroom/dto/create-chatroom.dto.ts
 import { IsString, IsNotEmpty, MaxLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 

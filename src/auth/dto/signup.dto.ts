@@ -1,6 +1,5 @@
-// src/auth/dto/signup.dto.ts
 import { IsMobilePhone, IsString, MinLength, MaxLength } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger'; // Optional: for Swagger documentation
+import { ApiProperty } from '@nestjs/swagger';
 
 export class SignupDto {
   @ApiProperty({ example: '+919876543210', description: 'User mobile number' })

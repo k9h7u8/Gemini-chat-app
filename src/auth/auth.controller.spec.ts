@@ -1,10 +1,9 @@
-// src/auth/auth.controller.spec.ts
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { CanActivate } from '@nestjs/common';
-import { ExecutionContext } from '@nestjs/common'; // Import ExecutionContext
+import { ExecutionContext } from '@nestjs/common';
 
 describe('AuthController', () => {
   let controller: AuthController;

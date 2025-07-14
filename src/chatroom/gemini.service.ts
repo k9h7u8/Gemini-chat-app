@@ -1,4 +1,3 @@
-// src/chatroom/gemini.service.ts
 import { Injectable, Logger, InternalServerErrorException } from '@nestjs/common';
 import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from '@google/generative-ai';
 import { ConfigService } from '@nestjs/config';

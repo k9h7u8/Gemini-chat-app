@@ -1,17 +1,16 @@
-// src/chatroom/chatroom.controller.ts
 import { Controller, Post, Body, UseGuards, Request, Get, Param, BadRequestException } from '@nestjs/common';
 import { ChatroomService } from './chatroom.service';
 import { CreateChatroomDto } from './dto/create-chatroom.dto';
 import { SendMessageDto } from './dto/send-message.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard'; // Assuming JwtAuthGuard is here or exported
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import {
   ApiBearerAuth,
   ApiOperation,
   ApiResponse,
   ApiTags,
-} from '@nestjs/swagger'; // For Swagger/OpenAPI documentation
+} from '@nestjs/swagger';
 
-@ApiTags('Chatrooms') // Tag for Swagger UI
+@ApiTags('Chatrooms')
 @ApiBearerAuth() // Indicates this controller requires a Bearer token
 @UseGuards(JwtAuthGuard) // Protect all routes in this controller
 @Controller('chatroom')

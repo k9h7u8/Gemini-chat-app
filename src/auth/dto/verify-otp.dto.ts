@@ -1,4 +1,3 @@
-// src/auth/dto/verify-otp.dto.ts
 import { IsMobilePhone, IsString, Length } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 

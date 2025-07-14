@@ -1,4 +1,3 @@
-// src/app.module.ts
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -27,11 +26,10 @@ import * as redisStore from 'cache-manager-redis-store';
         }
         const parsedRedisUrl = new URL(redisUrl);
 
-        const connectionOptions: any = { // Use 'any' or define a more specific type if needed
+        const connectionOptions: any = {
           host: parsedRedisUrl.hostname,
           port: parseInt(parsedRedisUrl.port),
           password: parsedRedisUrl.password || undefined,
-          // Add these ioredis specific options for resilience:
           maxRetriesPerRequest: null, // Allow commands to retry indefinitely
           enableOfflineQueue: true, // Queue commands while connection is down
           retryStrategy: (times) => {
@@ -39,11 +37,7 @@ import * as redisStore from 'cache-manager-redis-store';
             console.log(`BullMQ Redis: Retrying connection (${times}). Delay: ${delay}ms`);
             return delay;
           },
-          // For rediss:// URLs, ioredis handles TLS automatically.
-          // Explicit `tls: {}` might be needed for some highly specific setups,
-          // but generally `rediss://` is sufficient for cloud providers like Render.
-          // If you face TLS errors, you might try: tls: {}
-          tls: parsedRedisUrl.protocol === 'rediss:' ? {} : undefined, // Explicit TLS for Upstash
+          tls: parsedRedisUrl.protocol === 'rediss:' ? {} : undefined,
         };
 
         return {
@@ -69,13 +63,12 @@ import * as redisStore from 'cache-manager-redis-store';
         }
         const parsedRedisUrl = new URL(redisUrl);
 
-        const storeOptions: any = { // Use 'any' or define a more specific type if needed
+        const storeOptions: any = {
           store: redisStore,
           host: parsedRedisUrl.hostname,
           port: parseInt(parsedRedisUrl.port),
           password: parsedRedisUrl.password || undefined,
           ttl: 300,
-          // Add these ioredis specific options for resilience for the cache:
           maxRetriesPerRequest: null, // Allow commands to retry indefinitely
           enableOfflineQueue: true, // Queue commands while connection is down
           retryStrategy: (times) => {

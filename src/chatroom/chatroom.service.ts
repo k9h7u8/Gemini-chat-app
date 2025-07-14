@@ -1,10 +1,9 @@
-// src/chatroom/chatroom.service.ts
 import {
   Injectable,
   NotFoundException,
   BadRequestException,
   Logger,
-  InternalServerErrorException // <-- ADD THIS IMPORT
+  InternalServerErrorException
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateChatroomDto } from './dto/create-chatroom.dto';
@@ -12,9 +11,9 @@ import { SendMessageDto } from './dto/send-message.dto';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import { GEMINI_QUEUE_NAME } from './gemini.processor';
-import { CACHE_MANAGER } from '@nestjs/cache-manager'; // <-- CHANGE THIS IMPORT
-import { Inject } from '@nestjs/common'; // Inject is from @nestjs/common
-import { Cache } from 'cache-manager'; // Type for cache manager
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Inject } from '@nestjs/common';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class ChatroomService {
@@ -23,7 +22,7 @@ export class ChatroomService {
   constructor(
     private prisma: PrismaService,
     @InjectQueue(GEMINI_QUEUE_NAME) private readonly geminiQueue: Queue,
-    @Inject(CACHE_MANAGER) private cacheManager: Cache, // <-- USE CACHE_MANAGER here
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   /**

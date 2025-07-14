@@ -1,4 +1,3 @@
-// src/prisma/prisma.service.spec.ts
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from './prisma.service';
 import { INestApplication } from '@nestjs/common';

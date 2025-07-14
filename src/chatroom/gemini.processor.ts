@@ -1,11 +1,10 @@
-// src/chatroom/gemini.processor.ts
 import { Processor, WorkerHost, OnWorkerEvent } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
 import { Logger } from '@nestjs/common';
 import { GeminiService } from './gemini.service';
 import { PrismaService } from '../prisma/prisma.service';
 
-export const GEMINI_QUEUE_NAME = 'gemini-messages'; // Define queue name
+export const GEMINI_QUEUE_NAME = 'gemini-messages';
 
 @Processor(GEMINI_QUEUE_NAME)
 export class GeminiProcessor extends WorkerHost {
