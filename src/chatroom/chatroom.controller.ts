@@ -27,7 +27,7 @@ export class ChatroomController {
     @Body() createChatroomDto: CreateChatroomDto,
   ) {
     // req.user is populated by JwtAuthGuard
-    return this.chatroomService.createChatroom(createChatroomDto, req.user.userId);
+    return this.chatroomService.createChatroom(createChatroomDto, req.user.id);
   }
 
   @Get()
@@ -35,7 +35,7 @@ export class ChatroomController {
   @ApiResponse({ status: 200, description: 'List of chatrooms.' })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   async listChatrooms(@Request() req) {
-    return this.chatroomService.listChatrooms(req.user.userId);
+    return this.chatroomService.listChatrooms(req.user.id);
   }
 
   @Get(':id')
@@ -46,7 +46,7 @@ export class ChatroomController {
     if (!chatroomId) {
       throw new BadRequestException('Chatroom ID is required.');
     }
-    return this.chatroomService.getChatroomDetails(chatroomId, req.user.userId);
+    return this.chatroomService.getChatroomDetails(chatroomId, req.user.id);
   }
 
   @Post(':id/message')
@@ -62,6 +62,6 @@ export class ChatroomController {
     if (!chatroomId) {
       throw new BadRequestException('Chatroom ID is required.');
     }
-    return this.chatroomService.sendMessage(chatroomId, req.user.userId, sendMessageDto);
+    return this.chatroomService.sendMessage(chatroomId, req.user.id, sendMessageDto);
   }
 }
