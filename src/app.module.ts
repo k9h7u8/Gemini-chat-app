@@ -6,6 +6,7 @@ import { PrismaService } from './prisma/prisma.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { ChatroomModule } from './chatroom/chatroom.module';
+import { SubscriptionModule } from './subscription/subscription.module';
 import { BullModule } from '@nestjs/bullmq';
 import { CacheModule } from '@nestjs/cache-manager';
 import * as redisStore from 'cache-manager-redis-store';
@@ -92,6 +93,7 @@ import * as redisStore from 'cache-manager-redis-store';
 
     AuthModule,
     ChatroomModule,
+    SubscriptionModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
